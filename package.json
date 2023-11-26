@@ -2,6 +2,7 @@
   "name": "auth-package",
   "version": "1.0.0",
   "main": "src/index.js",
+  "types":"dist",
   "scripts": {
     "build": "rollup -c",
     "dev": "concurrently \"tsc --watch\" \"nodemon ./src/index.ts\"",
