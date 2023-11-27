@@ -1,6 +1,7 @@
 {
-  "name": "auth-package",
+  "name": "auth_with_otp",
   "version": "1.0.0",
+  "description": "Otp based Authentication package made to streamline the process of otp based Authentication",
   "main": "src/index.js",
   "types":"dist",
   "scripts": {
@@ -8,6 +9,11 @@
     "dev": "concurrently \"tsc --watch\" \"nodemon ./src/index.ts\"",
     "prepare": "npm run build"
   },
+  "repository": "Adityagupta1625/otp-auth",
+  "keywords": [
+    "Authentication",
+    "otp"
+  ],
   "license": "MIT",
   "dependencies": {
     "@types/jest": "^29.5.10",
