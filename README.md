@@ -1,16 +1,23 @@
 
-# otp-auth
+# Project Name
 
-This repository contains the source code for an OTP (One-Time Password) authentication service. The service utilizes Redis for storing and verifying OTPs and a node mail server for sending OTPs via email.
-`
+This repository contains the source code for an OTP (One-Time Password) authentication service. The service utilizes Redis for storing and verifying OTPs and a mail server for sending OTPs via email.
+
+## Installation
+
+To get started with the OTP authentication service, follow these installation steps:
+
+```bash
+npm install
+```
 
 ## Configuration
 
 ### Mail Server Configuration
 
-Make sure to configure the mail server settings by providing the necessary information in the \`MailServerConfiguration\` interface. The interface is defined as follows:
+Make sure to configure the mail server settings by providing the necessary information in the `MailServerConfiguration` interface. The interface is defined as follows:
 
-\`\`\`typescript
+```typescript
 interface MailServerConfiguration {
   host: string;
   port: number;
@@ -20,15 +27,15 @@ interface MailServerConfiguration {
   subject: string;
   body: string;
 }
-\`\`\`
+```
 
 ### Redis Configuration
 
-Update the Redis URL in the \`Auth\` class constructor:
+Update the Redis URL in the `Auth` class constructor:
 
-\`\`\`typescript
+```typescript
 const auth = new Auth('YOUR_REDIS_URL', mailServerConfig);
-\`\`\`
+```
 
 ## Usage
 
@@ -36,22 +43,22 @@ const auth = new Auth('YOUR_REDIS_URL', mailServerConfig);
 
 To generate and send an OTP to a specified email address, use the following code snippet:
 
-\`\`\`typescript
+```typescript
 const email = 'user@example.com';
 
 try {
   await auth.generateOTP(email);
-  console.log(\`OTP sent successfully to \${email}\`);
+  console.log(`OTP sent successfully to ${email}`);
 } catch (error) {
-  console.error(\`Error sending OTP: \${error.message}\`);
+  console.error(`Error sending OTP: ${error.message}`);
 }
-\`\`\`
+```
 
 ### Verify OTP
 
 To verify an OTP for a specified email address, use the following code snippet:
 
-\`\`\`typescript
+```typescript
 const email = 'user@example.com';
 const userEnteredOTP = '123456'; // Replace with the actual OTP entered by the user
 
@@ -63,11 +70,10 @@ try {
     console.log('Invalid OTP');
   }
 } catch (error) {
-  console.error(\`Error verifying OTP: \${error.message}\`);
+  console.error(`Error verifying OTP: ${error.message}`);
 }
-\`\`\`
+```
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
