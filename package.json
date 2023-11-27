@@ -1,13 +1,11 @@
 {
   "name": "auth_with_otp",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Otp based Authentication package made to streamline the process of otp based Authentication",
-  "main": "src/index.js",
-  "types":"dist",
+  "main": "dist/index.js",
+  "types":"dist/index.d.ts",
   "scripts": {
-    "build": "rollup -c",
-    "dev": "concurrently \"tsc --watch\" \"nodemon ./src/index.ts\"",
-    "prepare": "npm run build"
+    "build": "tsc"
   },
   "repository": "Adityagupta1625/otp-auth",
   "keywords": [
@@ -19,17 +17,12 @@
     "@types/jest": "^29.5.10",
     "@types/nodemailer": "^6.4.14",
     "@types/otp-generator": "^4.0.2",
-    "concurrently": "^8.2.2",
     "eslint": "^8.0.1",
     "jest": "^29.7.0",
     "nodemailer": "^6.9.7",
     "otp-generator": "^4.0.1",
     "redis": "^4.6.11",
-    "rollup": "^4.5.2",
-    "rollup-plugin-typescript2": "^0.36.0",
     "ts-jest": "^29.1.1",
-    "ts-node": "^10.9.1",
-    "ts-node-dev": "^2.0.0",
     "typescript": "*"
   },
   "devDependencies": {

@@ -1,31 +1,27 @@
 import nodemailer from "nodemailer";
+import { MailServerConfiguration } from "./type";
 
 export const sendMail = async (
-  host: string,
-  port: number,
-  user: string,
-  pass: string,
-  from: string,
-  to: string,
-  subject: string,
-  text: string
+  mailServerConfig: MailServerConfiguration,
+  to:string,
+  otp: string,
 ):Promise<void> => {
   try {
     const transporter: any = nodemailer.createTransport({
-      host: host,
-      port: port,
+      host: mailServerConfig.host,
+      port: mailServerConfig.port,
       secure: false,
       auth: {
-        user: user,
-        pass: pass,
+        user: mailServerConfig.email,
+        pass: mailServerConfig.pass,
       },
     });
 
     const mailOptions = {
-      from: `"${from}" <${user}>`,
+      from: `"${mailServerConfig.name}" <${mailServerConfig.email}>`,
       to: to,
-      subject: subject,
-      html: `${text}`,
+      subject: mailServerConfig.subject,
+      html: `${mailServerConfig.body.replace("{{otp}}",otp)}`,
     };
 
     await transporter.sendMail(mailOptions);
