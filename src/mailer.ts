@@ -1,11 +1,11 @@
-import nodemailer from "nodemailer";
-import { MailServerConfiguration } from "./type";
+import nodemailer from 'nodemailer'
+import { type MailServerConfiguration } from './type'
 
 export const sendMail = async (
   mailServerConfig: MailServerConfiguration,
-  to:string,
-  otp: string,
-):Promise<void> => {
+  to: string,
+  otp: string
+): Promise<void> => {
   try {
     const transporter: any = nodemailer.createTransport({
       host: mailServerConfig.host,
@@ -13,21 +13,19 @@ export const sendMail = async (
       secure: false,
       auth: {
         user: mailServerConfig.email,
-        pass: mailServerConfig.pass,
-      },
-    });
+        pass: mailServerConfig.pass
+      }
+    })
 
     const mailOptions = {
-      from: `"${mailServerConfig.name}" <${mailServerConfig.email}>`,
-      to: to,
+      from: `'${mailServerConfig.name}' <${mailServerConfig.email}>`,
+      to,
       subject: mailServerConfig.subject,
-      html: `${mailServerConfig.body.replace("{{otp}}",otp)}`,
-    };
+      html: `${mailServerConfig.body.replace('{{otp}}', otp)}`
+    }
 
-    await transporter.sendMail(mailOptions);
-  } 
-  
-  catch (e: any) {
-    throw new Error(e);
+    await transporter.sendMail(mailOptions)
+  } catch (e: any) {
+    throw new Error(e)
   }
-};
+}

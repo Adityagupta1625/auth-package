@@ -1,7 +1,7 @@
-import otpGenerator from 'otp-generator';
-import { redisClient } from './redis';
-import { sendMail } from './mailer';
-import { MailServerConfiguration } from './type';
+import otpGenerator from 'otp-generator'
+import { redisClient } from './redis'
+import { sendMail } from './mailer'
+import { type MailServerConfiguration } from './type'
 
 /**
  * Auth class for handling OTP generation and verification.
@@ -15,7 +15,7 @@ export class Auth {
    * @type {MailServerConfiguration}
    * @private
    */
-  private mailServerConfig: MailServerConfiguration;
+  private readonly mailServerConfig: MailServerConfiguration
 
   /**
    * The Redis URL for connecting to the Redis database.
@@ -23,7 +23,7 @@ export class Auth {
    * @type {string}
    * @private
    */
-  private redisURL: string = "";
+  private readonly redisURL: string = ''
 
   /**
    * Creates an instance of Auth.
@@ -33,9 +33,10 @@ export class Auth {
    * @memberof Auth
    * @constructor
    */
-  constructor(redisURL: string, mailServerConfig: MailServerConfiguration) {
-    this.redisURL = redisURL;
-    this.mailServerConfig = mailServerConfig;
+
+  constructor (redisURL: string, mailServerConfig: MailServerConfiguration) {
+    this.redisURL = redisURL
+    this.mailServerConfig = mailServerConfig
   }
 
   /**
@@ -46,29 +47,31 @@ export class Auth {
    * @memberof Auth
    * @public
    */
-  public async generateOTP(email: string): Promise<void> {
+
+  public async generateOTP (email: string): Promise<void> {
     try {
       // Generate OTP
       const otp = otpGenerator.generate(6, {
         upperCaseAlphabets: false,
-        specialChars: false,
-      });
+        specialChars: false
+      })
 
       // Send OTP via email
-      sendMail(this.mailServerConfig, email, otp);
+      await sendMail(this.mailServerConfig, email, otp)
 
       // Connect to Redis database
-      const dbClient = await redisClient(this.redisURL);
+      const dbClient = await redisClient(this.redisURL)
 
       // Remove existing OTP if any
-      if (await dbClient.get(email)) {
-        dbClient.del(email);
+      const existingOTP: any = await dbClient.get(email)
+      if (existingOTP) {
+        await dbClient.del(email)
       }
 
       // Store new OTP in Redis
-      dbClient.set(email, otp);
+      dbClient.set(email, otp)
     } catch (e: any) {
-      throw new Error(e);
+      throw new Error(e)
     }
   }
 
@@ -81,24 +84,24 @@ export class Auth {
    * @memberof Auth
    * @public
    */
-  public async verifyOTP(email: string, otp: string): Promise<boolean> {
+  public async verifyOTP (email: string, otp: string): Promise<boolean> {
     try {
       // Connect to Redis database
-      const dbClient = await redisClient(this.redisURL);
+      const dbClient = await redisClient(this.redisURL)
 
       // Retrieve stored OTP from Redis
-      const storedOTP = await dbClient.get(email);
+      const storedOTP = await dbClient.get(email)
 
       // Compare provided OTP with stored OTP
       if (storedOTP === otp) {
         // Delete OTP from Redis if it matches
-        dbClient.del(email);
-        return true;
+        dbClient.del(email)
+        return true
       } else {
-        return false;
+        return false
       }
     } catch (e: any) {
-      throw new Error(e);
+      throw new Error(e)
     }
   }
 }
