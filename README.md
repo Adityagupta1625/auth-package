@@ -1,5 +1,5 @@
 
-# Email otp auth
+# Email OTP auth
 
 This repository contains the source code for an OTP (One-Time Password) authentication service. The service utilizes Redis for storing and verifying OTPs and a mail server for sending OTPs via email.
 
