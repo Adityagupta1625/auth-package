@@ -1,6 +1,6 @@
 {
-  "name": "auth_with_otp",
-  "version": "1.0.1",
+  "name": "email-otp-auth",
+  "version": "0.0.0",
   "description": "Otp based Authentication package made to streamline the process of otp based Authentication",
   "main": "dist/index.js",
   "types":"dist/index.d.ts",
