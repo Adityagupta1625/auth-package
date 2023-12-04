@@ -1,0 +1,17 @@
+{
+  "name": "@email-otp-auth/redis",
+  "description": "Otp based Authentication package made to streamline the process of otp based Authentication",
+  "version": "0.0.1",
+  "license": "MIT",
+  "repository": "https://github.com/Adityagupta1625/otp-auth",
+  "scripts": {
+    "start":"ts-node-dev index.ts",
+    "build":"tsc"
+  },
+  "dependencies": {
+    "@email-otp-auth/utils":"0.0.1",
+    "redis": "^4.6.11"
+  },
+  "main": "index.ts",
+  "author": "Aditya Gupta <72199742+Adityagupta1625@users.noreply.github.com>"
+}
