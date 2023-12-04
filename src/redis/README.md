@@ -1,8 +1,7 @@
 
 # Email OTP Auth/Redis
 
-This service utilizes Redis for storing and verifying OTPs and a mail server for sending OTPs via email.
-
+This package provies a stremaline way for authentication service using email OTP.This service utilizes Redis for storing and verifying OTPs and a mail server for sending OTPs via email.
 
 ## Configuration
 
