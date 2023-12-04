@@ -1,6 +1,6 @@
 {
   "name": "@email-otp-auth/utils",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Otp based Authentication package made to streamline the process of otp based Authentication",
   "main": "index.ts",
   "repository": "https://github.com/Adityagupta1625/otp-auth",
@@ -15,5 +15,9 @@
     "@types/otp-generator": "^4.0.2",
     "nodemailer": "^6.9.7",
     "otp-generator": "^4.0.1"
-  }
+  },
+  "keywords": [
+    "Authentication",
+    "otp"
+  ]
 }
