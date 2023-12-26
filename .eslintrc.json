@@ -8,9 +8,7 @@
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
-  "ignorePatterns":[
-    "dist"
-  ],
+  "ignorePatterns": ["dist"],
   "rules": {},
   "overrides": [
     {

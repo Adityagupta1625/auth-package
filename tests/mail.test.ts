@@ -1,6 +1,6 @@
-import { sendMail } from '../src/utils/src/mailer' // Adjust the path accordingly
-import nodemailer,{Transporter} from 'nodemailer'
-import { mocked } from 'jest-mock'
+import { sendMail } from '../src/utils/src/mailer'; // Adjust the path accordingly
+import nodemailer, { Transporter } from 'nodemailer';
+import { mocked } from 'jest-mock';
 
 jest.mock('nodemailer');
 const mockedCreateTransport = mocked(nodemailer.createTransport);
@@ -8,14 +8,17 @@ const mockedSendMail = jest.fn();
 
 beforeEach(() => {
   jest.clearAllMocks();
-  mockedCreateTransport.mockImplementation(() => ({
-    sendMail: mockedSendMail,
-  }) as unknown as Transporter);
+  mockedCreateTransport.mockImplementation(
+    () =>
+      ({
+        sendMail: mockedSendMail,
+      }) as unknown as Transporter
+  );
 });
 
 describe('sendMail', () => {
   test('should send an email successfully', async () => {
-    const consoleSpy = jest.spyOn(console, 'log')
+    const consoleSpy = jest.spyOn(console, 'log');
 
     // Arrange
     const mailServerConfig = {
@@ -54,12 +57,12 @@ describe('sendMail', () => {
     });
 
     // Ensure the success message is logged
-    expect(consoleSpy).toHaveBeenCalledWith('Email sent successfully')
-    consoleSpy.mockRestore()
+    expect(consoleSpy).toHaveBeenCalledWith('Email sent successfully');
+    consoleSpy.mockRestore();
   });
 
   test('should throw an error if sending email fails', async () => {
-    const consoleSpy = jest.spyOn(console, 'error')
+    const consoleSpy = jest.spyOn(console, 'error');
     // Arrange
     const mailServerConfig = {
       host: 'smtp.example.com',
@@ -79,10 +82,12 @@ describe('sendMail', () => {
     mockedSendMail.mockRejectedValueOnce(new Error('Sending email failed'));
 
     // Act and Assert
-    await expect(sendMail(mailServerConfig, to, otp)).rejects.toThrow('Sending email failed');
+    await expect(sendMail(mailServerConfig, to, otp)).rejects.toThrow(
+      'Sending email failed'
+    );
 
     // Ensure the error is logged
-    expect(consoleSpy).toHaveBeenCalledWith(expect.any(Error))
-    consoleSpy.mockRestore()
+    expect(consoleSpy).toHaveBeenCalledWith(expect.any(Error));
+    consoleSpy.mockRestore();
   });
 });

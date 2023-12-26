@@ -1,3 +1,3 @@
-import * as mailer from './src/mailer'
+import * as mailer from './src/mailer';
 
-export { mailer }
+export { mailer };

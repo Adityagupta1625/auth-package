@@ -6,6 +6,6 @@
  * @property {string} otp - The One-Time Password (OTP) associated with the user.
  */
 export interface dbData {
-  email: string
-  otp: string
+  email: string;
+  otp: string;
 }

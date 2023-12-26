@@ -1,5 +1,5 @@
-import sqlite3 from 'sqlite3'
-import { type dbTypes } from '@email-otp-auth/utils/types'
+import sqlite3 from 'sqlite3';
+import { type dbTypes } from '@email-otp-auth/utils/types';
 
 /**
  * Establishes a connection to the SQLite database.
@@ -9,12 +9,12 @@ import { type dbTypes } from '@email-otp-auth/utils/types'
  */
 const getDBConnection = async (): Promise<sqlite3.Database> => {
   try {
-    const db = new sqlite3.Database('./users.db')
-    return db
+    const db = new sqlite3.Database('./users.db');
+    return db;
   } catch (e) {
-    throw new Error(e)
+    throw new Error(e);
   }
-}
+};
 
 /**
  * Creates the "users" table in the SQLite database if it doesn't exist.
@@ -22,23 +22,23 @@ const getDBConnection = async (): Promise<sqlite3.Database> => {
  * @returns {Promise<void>} - A Promise that resolves when the table creation is completed.
  */
 const createTableQuery = async (): Promise<string> => {
-  const db = await getDBConnection()
+  const db = await getDBConnection();
 
   return await new Promise((resolve, reject) => {
     db.run(
       'CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY, email TEXT UNIQUE, otp TEXT)',
       (err) => {
         if (err !== null) {
-          reject(err)
+          reject(err);
         } else {
-          resolve('done')
+          resolve('done');
         }
       }
-    )
+    );
 
-    db.close()
-  })
-}
+    db.close();
+  });
+};
 
 /**
  * Fetches user information (email and OTP) from the "users" table based on the provided email.
@@ -47,7 +47,7 @@ const createTableQuery = async (): Promise<string> => {
  * @returns {Promise<dbTypes.dbData>} - A Promise that resolves to the user information (email and OTP).
  */
 const fetchQuery = async (data: dbTypes.dbData): Promise<dbTypes.dbData> => {
-  const db = await getDBConnection()
+  const db = await getDBConnection();
 
   return await new Promise((resolve, reject) => {
     db.get(
@@ -55,16 +55,16 @@ const fetchQuery = async (data: dbTypes.dbData): Promise<dbTypes.dbData> => {
       [data.email],
       (err, row) => {
         if (err !== null) {
-          reject(err)
+          reject(err);
         } else {
-          resolve(row as dbTypes.dbData)
+          resolve(row as dbTypes.dbData);
         }
       }
-    )
+    );
 
-    db.close()
-  })
-}
+    db.close();
+  });
+};
 
 /**
  * Inserts or updates the OTP for a user in the "users" table.
@@ -73,7 +73,7 @@ const fetchQuery = async (data: dbTypes.dbData): Promise<dbTypes.dbData> => {
  * @returns {Promise<void>} - A Promise that resolves when the insertion or update is completed.
  */
 const insertQuery = async (data: dbTypes.dbData): Promise<string> => {
-  const db = await getDBConnection()
+  const db = await getDBConnection();
 
   return await new Promise((resolve, reject) => {
     db.run(
@@ -81,17 +81,16 @@ const insertQuery = async (data: dbTypes.dbData): Promise<string> => {
       [data.email, data.otp],
       (err) => {
         if (err !== null) {
-          reject(err)
+          reject(err);
         } else {
-          resolve('done')
+          resolve('done');
         }
       }
-    )
+    );
 
-    db.close()
-  })
-}
-
+    db.close();
+  });
+};
 
 /**
  * Inserts the OTP for a user into the "users" table, creating the table if necessary.
@@ -102,19 +101,19 @@ const insertQuery = async (data: dbTypes.dbData): Promise<string> => {
  */
 export const insertOTP = async (data: dbTypes.dbData): Promise<void> => {
   try {
-    const db = await getDBConnection()
+    const db = await getDBConnection();
 
-    await createTableQuery()
+    await createTableQuery();
 
-    await insertQuery(data)
+    await insertQuery(data);
 
-    db.close()
+    db.close();
 
-    console.log('OTP inserted into Sqlite successfully.')
+    console.log('OTP inserted into Sqlite successfully.');
   } catch (e) {
-    throw new Error(e)
+    throw new Error(e);
   }
-}
+};
 
 /**
  * Verifies the provided OTP for a user by checking it against the stored OTP in the "users" table.
@@ -126,15 +125,15 @@ export const insertOTP = async (data: dbTypes.dbData): Promise<void> => {
  */
 export const verifyOTP = async (data: dbTypes.dbData): Promise<boolean> => {
   try {
-    const results = await fetchQuery(data)
-    console.log('results-->', results)
+    const results = await fetchQuery(data);
+    console.log('results-->', results);
 
     if (results.otp === data.otp) {
-      return true
+      return true;
     } else {
-      return false
+      return false;
     }
   } catch (e) {
-    throw new Error(e)
+    throw new Error(e);
   }
-}
+};
