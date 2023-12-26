@@ -6,9 +6,8 @@
   "repository": "https://github.com/Adityagupta1625/otp-auth",
   "author": "Aditya Gupta",
   "license": "MIT",
-  "private": true,
-  "scripts":{
-    "build":"tsc"
+  "scripts": {
+    "build": "tsc"
   },
   "dependencies": {
     "@types/nodemailer": "^6.4.14",

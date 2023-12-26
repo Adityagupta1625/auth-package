@@ -1,7 +1,7 @@
-import otpGenerator from 'otp-generator';
-import { mailer } from '@email-otp-auth/utils';
-import { type mailTypes } from '@email-otp-auth/utils/types';
-import { insertOTP, verifyOTP } from './sqlite';
+import otpGenerator from 'otp-generator'
+import { mailer } from '@email-otp-auth/utils'
+import { type mailTypes } from '@email-otp-auth/utils/types'
+import { insertOTP, verifyOTP } from './sqlite'
 
 /**
  * Auth class for handling OTP generation and verification using SQLite for OTP storage.
@@ -15,7 +15,7 @@ export class Auth {
    * @type {mailTypes.MailServerConfiguration}
    * @private
    */
-  private readonly mailServerConfig: mailTypes.MailServerConfiguration;
+  private readonly mailServerConfig: mailTypes.MailServerConfiguration
 
   /**
    * Creates an instance of Auth.
@@ -24,8 +24,8 @@ export class Auth {
    * @memberof Auth
    * @constructor
    */
-  constructor(mailServerConfig: mailTypes.MailServerConfiguration) {
-    this.mailServerConfig = mailServerConfig;
+  constructor (mailServerConfig: mailTypes.MailServerConfiguration) {
+    this.mailServerConfig = mailServerConfig
   }
 
   /**
@@ -36,24 +36,23 @@ export class Auth {
    * @memberof Auth
    * @public
    */
-  public async generateOTP(email: string): Promise<void> {
+  public async generateOTP (email: string): Promise<void> {
     try {
       // Generate OTP
       const otp = otpGenerator.generate(6, {
         upperCaseAlphabets: false,
         specialChars: false,
-        lowerCaseAlphabets: false,
-      });
+        lowerCaseAlphabets: false
+      })
 
       // Send OTP via email
-      await mailer.sendMail(this.mailServerConfig, email, otp);
+      await mailer.sendMail(this.mailServerConfig, email, otp)
 
       // Insert OTP in SQLite database
-      await insertOTP({ email, otp });
-
+      await insertOTP({ email, otp })
     } catch (e: any) {
       // Throw an error if there is an issue generating or sending OTP.
-      throw new Error(e);
+      throw new Error(e)
     }
   }
 
@@ -66,14 +65,14 @@ export class Auth {
    * @memberof Auth
    * @public
    */
-  public async verifyOTP(email: string, otp: string): Promise<boolean> {
+  public async verifyOTP (email: string, otp: string): Promise<boolean> {
     try {
       // Verify OTP in SQLite database
-      const response: boolean = await verifyOTP({ email, otp });
-      return response;
+      const response: boolean = await verifyOTP({ email, otp })
+      return response
     } catch (e: any) {
       // Throw an error if there is an issue verifying OTP.
-      throw new Error(e);
+      throw new Error(e)
     }
   }
 }

@@ -1,8 +1,6 @@
-
 # Email OTP Auth/Sqlite
 
 This package provies a stremaline way for authentication service using email OTP.This service utilizes SQLite DB for storing and verifying OTPs and a mail server for sending OTPs via email.
-
 
 ## Configuration
 
@@ -13,7 +11,7 @@ Make sure to configure the mail server settings by providing the necessary infor
 ```typescript
 interface MailServerConfiguration {
   host: string; // The host name of the mail server.
-  port: number;  // The port number for connecting to the mail server.
+  port: number; // The port number for connecting to the mail server.
   email: string; // The email address used for authentication.
   pass: string; // The app password associated with the email address for authentication. You can refer google for app password.
   name: string; // The name associated with the sender of the email.

@@ -6,8 +6,8 @@
   "author": "Aditya Gupta <72199742+Adityagupta1625@users.noreply.github.com>",
   "repository": "https://github.com/Adityagupta1625/otp-auth",
   "scripts": {
-    "start":"ts-node-dev index.ts",
-    "build":"tsc"
+    "start": "ts-node-dev index.ts",
+    "build": "tsc"
   },
   "keywords": [
     "Authentication",
@@ -16,9 +16,8 @@
     "Mailer"
   ],
   "license": "MIT",
-  "private": true,
   "dependencies": {
-    "@email-otp-auth/utils":"^0.0.2",
+    "@email-otp-auth/utils": "^0.0.2",
     "sqlite3": "^5.1.1"
   }
 }

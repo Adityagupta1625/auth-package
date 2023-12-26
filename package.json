@@ -5,10 +5,14 @@
   "workspaces": [
     "src/**"
   ],
+  "private": true,
   "scripts": {
     "build": "tsc",
     "start:a": "cd src/redis && yarn start",
-    "start:b": "cd src/sqlite && yarn start"
+    "start:b": "cd src/sqlite && yarn start",
+    "format": "prettier --write .",
+    "lint": "eslint --fix src/**/*.ts",
+    "test": "jest"
   },
   "repository": "https://github.com/Adityagupta1625/otp-auth",
   "keywords": [
@@ -17,12 +21,20 @@
   ],
   "license": "MIT",
   "devDependencies": {
+    "@commitlint/cli": "^18.4.3",
+    "@commitlint/config-conventional": "^18.4.3",
+    "@types/jest": "^29.5.11",
     "@typescript-eslint/eslint-plugin": "^6.4.0",
+    "dotenv": "^16.3.1",
     "eslint": "^8.0.1",
     "eslint-config-standard-with-typescript": "^40.0.0",
     "eslint-plugin-import": "^2.25.2",
     "eslint-plugin-n": "^15.0.0 || ^16.0.0 ",
     "eslint-plugin-promise": "^6.0.0",
+    "husky": "^8.0.3",
+    "jest-mock": "^29.7.0",
+    "prettier": "^3.1.1",
+    "ts-jest": "^29.1.1",
     "ts-node-dev": "^2.0.0",
     "typescript": "*"
   },

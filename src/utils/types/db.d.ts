@@ -5,8 +5,7 @@
  * @property {string} email - The email address of the user.
  * @property {string} otp - The One-Time Password (OTP) associated with the user.
  */
-export type dbData = {
-    email: string;
-    otp: string;
-  };
-  
+export interface dbData {
+  email: string
+  otp: string
+}

@@ -1,5 +1,5 @@
-import * as dbTypes from "./db";
-import * as mailTypes from "./mail";
+import * as dbTypes from './db'
+import * as mailTypes from './mail'
 
 /**
  * Module re-exporting types related to database and mail operations.
@@ -8,4 +8,4 @@ import * as mailTypes from "./mail";
  * @see {@link dbTypes} - Types related to database operations.
  * @see {@link mailTypes} - Types related to mail operations.
  */
-export { dbTypes, mailTypes };
+export { dbTypes, mailTypes }

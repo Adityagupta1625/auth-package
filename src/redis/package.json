@@ -5,11 +5,11 @@
   "license": "MIT",
   "repository": "https://github.com/Adityagupta1625/otp-auth",
   "scripts": {
-    "start":"ts-node-dev index.ts",
-    "build":"tsc"
+    "start": "ts-node-dev index.ts",
+    "build": "tsc"
   },
   "dependencies": {
-    "@email-otp-auth/utils":"^0.0.2",
+    "@email-otp-auth/utils": "^0.0.2",
     "redis": "^4.6.11"
   },
   "keywords": [

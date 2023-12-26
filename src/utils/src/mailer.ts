@@ -1,5 +1,5 @@
-import nodemailer from 'nodemailer';
-import { mailTypes } from '../types';
+import nodemailer from 'nodemailer'
+import { type mailTypes } from '../types'
 
 /**
  * Sends an email containing a One-Time Password (OTP) to the specified recipient.
@@ -23,22 +23,25 @@ export const sendMail = async (
       secure: false,
       auth: {
         user: mailServerConfig.email,
-        pass: mailServerConfig.pass,
-      },
-    });
+        pass: mailServerConfig.pass
+      }
+    })
 
     // Configure email options including sender, recipient, subject, and HTML content.
     const mailOptions = {
       from: `'${mailServerConfig.name}' <${mailServerConfig.email}>`,
       to,
       subject: mailServerConfig.subject,
-      html: `${mailServerConfig.body.replace('{{otp}}', otp)}`,
-    };
+      html: `${mailServerConfig.body.replace('{{otp}}', otp)}`
+    }
 
     // Send the email using the configured transporter and mail options.
-    await transporter.sendMail(mailOptions);
+    await transporter.sendMail(mailOptions)
+
+    console.log('Email sent successfully') // Log a message indicating that the email was sent successfully.
   } catch (e: any) {
     // Throw an error if there is an issue with sending the email.
-    throw new Error(e);
+    console.error(e)
+    throw new Error(e)
   }
-};
+}

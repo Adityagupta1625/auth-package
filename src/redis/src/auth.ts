@@ -1,7 +1,7 @@
-import otpGenerator from 'otp-generator';
-import { mailer } from '@email-otp-auth/utils';
+import otpGenerator from 'otp-generator'
+import { mailer } from '@email-otp-auth/utils'
 import { type mailTypes } from '@email-otp-auth/utils/types'
-import { insertOTP, verifyOTP } from './redis';
+import { insertOTP, verifyOTP } from './redis'
 
 /**
  * Auth class for handling OTP generation and verification.
@@ -15,7 +15,7 @@ export class Auth {
    * @type {mailTypes.MailServerConfiguration}
    * @private
    */
-  private readonly mailServerConfig: mailTypes.MailServerConfiguration;
+  private readonly mailServerConfig: mailTypes.MailServerConfiguration
 
   /**
    * The Redis URL for connecting to the Redis database.
@@ -23,7 +23,7 @@ export class Auth {
    * @type {string}
    * @private
    */
-  private readonly redisURL: string = '';
+  private readonly redisURL: string = ''
 
   /**
    * Creates an instance of Auth.
@@ -33,9 +33,12 @@ export class Auth {
    * @memberof Auth
    * @constructor
    */
-  constructor(redisURL: string, mailServerConfig: mailTypes.MailServerConfiguration) {
-    this.redisURL = redisURL;
-    this.mailServerConfig = mailServerConfig;
+  constructor (
+    redisURL: string,
+    mailServerConfig: mailTypes.MailServerConfiguration
+  ) {
+    this.redisURL = redisURL
+    this.mailServerConfig = mailServerConfig
   }
 
   /**
@@ -46,23 +49,23 @@ export class Auth {
    * @memberof Auth
    * @public
    */
-  public async generateOTP(email: string): Promise<void> {
+  public async generateOTP (email: string): Promise<void> {
     try {
       // Generate OTP
       const otp = otpGenerator.generate(6, {
         upperCaseAlphabets: false,
         specialChars: false,
-        lowerCaseAlphabets: false,
-      });
+        lowerCaseAlphabets: false
+      })
 
       // Send OTP via email
-      await mailer.sendMail(this.mailServerConfig, email, otp);
+      await mailer.sendMail(this.mailServerConfig, email, otp)
 
       // Insert OTP in Redis
-      await insertOTP({ email, otp }, this.redisURL);
+      await insertOTP({ email, otp }, this.redisURL)
     } catch (e: any) {
       // Throw an error if there is an issue generating or sending OTP.
-      throw new Error(e);
+      throw new Error(e)
     }
   }
 
@@ -75,14 +78,14 @@ export class Auth {
    * @memberof Auth
    * @public
    */
-  public async verifyOTP(email: string, otp: string): Promise<boolean> {
+  public async verifyOTP (email: string, otp: string): Promise<boolean> {
     try {
       // Verify OTP in Redis
-      const response: boolean = await verifyOTP({ email, otp }, this.redisURL);
-      return response;
+      const response: boolean = await verifyOTP({ email, otp }, this.redisURL)
+      return response
     } catch (e: any) {
       // Throw an error if there is an issue verifying OTP.
-      throw new Error(e);
+      throw new Error(e)
     }
   }
 }
