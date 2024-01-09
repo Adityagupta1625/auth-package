@@ -1,4 +1,4 @@
-import { Auth } from './src/auth';
+import { Auth } from './auth';
 
 /**
  * Default export for the Auth module.
@@ -7,4 +7,4 @@ import { Auth } from './src/auth';
  * @module Auth
  * @see {@link Auth} - The Auth class or module for authentication.
  */
-export default Auth;
+export {Auth};

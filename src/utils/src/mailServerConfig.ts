@@ -2,7 +2,7 @@
  * Configuration interface for mail server settings.
  *
  * @interface MailServerConfiguration
- */ export interface MailServerConfiguration {
+ */export interface MailServerConfiguration {
   /**
    * The host name of the mail server.
    *

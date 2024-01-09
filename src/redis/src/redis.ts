@@ -1,5 +1,17 @@
 import { createClient } from 'redis';
-import { type dbTypes } from '@email-otp-auth/utils/types';
+
+
+/**
+ * Type definition for representing user data in the context of OTP (One-Time Password) operations.
+ *
+ * @typedef {Object} dbData
+ * @property {string} email - The email address of the user.
+ * @property {string} otp - The One-Time Password (OTP) associated with the user.
+ */
+interface dbData {
+  email: string;
+  otp: string;
+}
 
 /**
  * Asynchronous function to create a Redis client and connect to a Redis server using the provided connection string.
@@ -38,7 +50,7 @@ const redisClient = async (connectionString: string): Promise<any> => {
  * @throws {Error} Throws an error if there is an issue inserting the OTP into Redis.
  */
 export const insertOTP = async (
-  data: dbTypes.dbData,
+  data: dbData,
   connectionString: string
 ): Promise<void> => {
   try {
@@ -49,7 +61,7 @@ export const insertOTP = async (
     await client.set(data.email, data.otp);
     await client.disconnect(); // Disconnect from the Redis server.
 
-    console.log('OTP inserted into Redis successfully.');
+    
   } catch (e: any) {
     // Throw an error if there is an issue with Redis operations.
     console.error(e);
@@ -66,7 +78,7 @@ export const insertOTP = async (
  * @throws {Error} Throws an error if there is an issue verifying the OTP in Redis.
  */
 export const verifyOTP = async (
-  data: dbTypes.dbData,
+  data: dbData,
   connectionString: string
 ): Promise<boolean> => {
   try {

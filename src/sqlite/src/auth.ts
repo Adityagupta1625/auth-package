@@ -1,8 +1,7 @@
 import otpGenerator from 'otp-generator';
-import { mailer } from '@email-otp-auth/utils';
-import { type mailTypes } from '@email-otp-auth/utils/types';
+import { mailer } from '../../utils/src';
 import { insertOTP, verifyOTP } from './sqlite';
-
+import { MailServerConfiguration } from '../../utils/src/mailServerConfig';
 /**
  * Auth class for handling OTP generation and verification using SQLite for OTP storage.
  *
@@ -15,16 +14,16 @@ export class Auth {
    * @type {mailTypes.MailServerConfiguration}
    * @private
    */
-  private readonly mailServerConfig: mailTypes.MailServerConfiguration;
+  private readonly mailServerConfig: MailServerConfiguration;
 
   /**
    * Creates an instance of Auth.
    *
-   * @param {mailTypes.MailServerConfiguration} mailServerConfig - The configuration for the mail server.
+   * @param {MailServerConfiguration} mailServerConfig - The configuration for the mail server.
    * @memberof Auth
    * @constructor
    */
-  constructor(mailServerConfig: mailTypes.MailServerConfiguration) {
+  constructor(mailServerConfig: MailServerConfiguration) {
     this.mailServerConfig = mailServerConfig;
   }
 
@@ -68,6 +67,8 @@ export class Auth {
   public async verifyOTP(email: string, otp: string): Promise<boolean> {
     try {
       // Verify OTP in SQLite database
+      if(email===null || otp===null) throw new Error('invalid arguments')
+      
       const response: boolean = await verifyOTP({ email, otp });
       return response;
     } catch (e: any) {

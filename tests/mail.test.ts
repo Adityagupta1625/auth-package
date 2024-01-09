@@ -18,7 +18,6 @@ beforeEach(() => {
 
 describe('sendMail', () => {
   test('should send an email successfully', async () => {
-    const consoleSpy = jest.spyOn(console, 'log');
 
     // Arrange
     const mailServerConfig = {
@@ -56,9 +55,7 @@ describe('sendMail', () => {
       html: `${mailServerConfig.body.replace('{{otp}}', otp)}`,
     });
 
-    // Ensure the success message is logged
-    expect(consoleSpy).toHaveBeenCalledWith('Email sent successfully');
-    consoleSpy.mockRestore();
+
   });
 
   test('should throw an error if sending email fails', async () => {

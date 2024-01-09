@@ -1,5 +1,17 @@
 import sqlite3 from 'sqlite3';
-import { type dbTypes } from '@email-otp-auth/utils/types';
+
+/**
+ * Type definition for representing user data in the context of OTP (One-Time Password) operations.
+ *
+ * @typedef {Object} dbData
+ * @property {string} email - The email address of the user.
+ * @property {string} otp - The One-Time Password (OTP) associated with the user.
+ */
+interface dbData {
+  email: string;
+  otp: string;
+}
+
 
 /**
  * Establishes a connection to the SQLite database.
@@ -43,10 +55,10 @@ const createTableQuery = async (): Promise<string> => {
 /**
  * Fetches user information (email and OTP) from the "users" table based on the provided email.
  *
- * @param {dbTypes.dbData} data - The data object containing the email for fetching user information.
- * @returns {Promise<dbTypes.dbData>} - A Promise that resolves to the user information (email and OTP).
+ * @param {dbData} data - The data object containing the email for fetching user information.
+ * @returns {Promise<dbData>} - A Promise that resolves to the user information (email and OTP).
  */
-const fetchQuery = async (data: dbTypes.dbData): Promise<dbTypes.dbData> => {
+const fetchQuery = async (data: dbData): Promise<dbData> => {
   const db = await getDBConnection();
 
   return await new Promise((resolve, reject) => {
@@ -57,7 +69,7 @@ const fetchQuery = async (data: dbTypes.dbData): Promise<dbTypes.dbData> => {
         if (err !== null) {
           reject(err);
         } else {
-          resolve(row as dbTypes.dbData);
+          resolve(row as dbData);
         }
       }
     );
@@ -69,10 +81,10 @@ const fetchQuery = async (data: dbTypes.dbData): Promise<dbTypes.dbData> => {
 /**
  * Inserts or updates the OTP for a user in the "users" table.
  *
- * @param {dbTypes.dbData} data - The data object containing the user's email and OTP.
+ * @param {dbData} data - The data object containing the user's email and OTP.
  * @returns {Promise<void>} - A Promise that resolves when the insertion or update is completed.
  */
-const insertQuery = async (data: dbTypes.dbData): Promise<string> => {
+const insertQuery = async (data: dbData): Promise<string> => {
   const db = await getDBConnection();
 
   return await new Promise((resolve, reject) => {
@@ -95,11 +107,11 @@ const insertQuery = async (data: dbTypes.dbData): Promise<string> => {
 /**
  * Inserts the OTP for a user into the "users" table, creating the table if necessary.
  *
- * @param {dbTypes.dbData} data - The data object containing the user's email and OTP.
+ * @param {dbData} data - The data object containing the user's email and OTP.
  * @returns {Promise<void>} - A Promise that resolves when the OTP insertion is completed.
  * @throws {Error} - Throws an error if there is an issue with the OTP insertion.
  */
-export const insertOTP = async (data: dbTypes.dbData): Promise<void> => {
+export const insertOTP = async (data: dbData): Promise<void> => {
   try {
     const db = await getDBConnection();
 
@@ -108,8 +120,6 @@ export const insertOTP = async (data: dbTypes.dbData): Promise<void> => {
     await insertQuery(data);
 
     db.close();
-
-    console.log('OTP inserted into Sqlite successfully.');
   } catch (e) {
     throw new Error(e);
   }
@@ -119,14 +129,13 @@ export const insertOTP = async (data: dbTypes.dbData): Promise<void> => {
  * Verifies the provided OTP for a user by checking it against the stored OTP in the "users" table.
  * If the OTP is valid, the user record is deleted.
  *
- * @param {dbTypes.dbData} data - The data object containing the user's email and OTP for verification.
+ * @param {dbData} data - The data object containing the user's email and OTP for verification.
  * @returns {Promise<boolean>} - A Promise that resolves to true if the OTP is valid, false otherwise.
  * @throws {Error} - Throws an error if there is an issue with OTP verification.
  */
-export const verifyOTP = async (data: dbTypes.dbData): Promise<boolean> => {
+export const verifyOTP = async (data: dbData): Promise<boolean> => {
   try {
     const results = await fetchQuery(data);
-    console.log('results-->', results);
 
     if (results.otp === data.otp) {
       return true;

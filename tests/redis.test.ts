@@ -7,16 +7,10 @@ const connectionString =
 
 describe('insertOTP', () => {
   test('should insert OTP into Redis', async () => {
-    const consoleSpy = jest.spyOn(console, 'log');
 
     // Act
     await insertOTP(data, connectionString);
 
-    // Assert
-    expect(consoleSpy).toHaveBeenCalledWith(
-      'OTP inserted into Redis successfully.'
-    );
-    consoleSpy.mockRestore();
   });
 });
 

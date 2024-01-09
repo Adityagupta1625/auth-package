@@ -1,6 +1,6 @@
 import otpGenerator from 'otp-generator';
-import { mailer } from '@email-otp-auth/utils';
-import { type mailTypes } from '@email-otp-auth/utils/types';
+import { mailer } from '../../utils/src';
+import { MailServerConfiguration } from '../../utils/src/mailServerConfig';
 import { insertOTP, verifyOTP } from './redis';
 
 /**
@@ -12,10 +12,10 @@ export class Auth {
   /**
    * The configuration for the mail server.
    *
-   * @type {mailTypes.MailServerConfiguration}
+   * @type {MailServerConfiguration}
    * @private
    */
-  private readonly mailServerConfig: mailTypes.MailServerConfiguration;
+  private readonly mailServerConfig: MailServerConfiguration;
 
   /**
    * The Redis URL for connecting to the Redis database.
@@ -35,7 +35,7 @@ export class Auth {
    */
   constructor(
     redisURL: string,
-    mailServerConfig: mailTypes.MailServerConfiguration
+    mailServerConfig: MailServerConfiguration
   ) {
     this.redisURL = redisURL;
     this.mailServerConfig = mailServerConfig;
