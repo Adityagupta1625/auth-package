@@ -1,36 +1,153 @@
 import { insertOTP, verifyOTP } from '../src/redis/src/redis';
+import { createClient } from 'redis';
 
-const data = { email: 'test@gmail.com', otp: '123456' };
+jest.mock('redis', () => ({
+  createClient: jest.fn(),
+}));
 
-const connectionString =
-  'rediss://red-clmlgokjtl8s73a5t110:SWtnFi6BIMjvBw6Ca4SGFOwKF4ieHcKE@oregon-redis.render.com:6379';
+describe('Redis OTP Operations', () => {
+  let mockCreateClient: jest.Mock;
+  let mockClient: any;
 
-describe('insertOTP', () => {
-  test('should insert OTP into Redis', async () => {
+  beforeEach(() => {
+    mockClient = {
+      on: jest.fn(),
+      set: jest.fn(),
+      get: jest.fn(),
+      disconnect: jest.fn(),
+      connect: jest.fn(),
+    };
 
-    // Act
+    mockCreateClient = jest.mocked(createClient).mockReturnValue(mockClient);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test('insertOTP should set OTP in Redis and disconnect', async () => {
+    const data = {
+      email: 'test@example.com',
+      otp: '123456',
+    };
+    const connectionString = 'redis://localhost:6379';
+
     await insertOTP(data, connectionString);
 
+    expect(createClient).toHaveBeenCalledWith({ url: connectionString });
+    expect(mockClient.set).toHaveBeenCalledWith(data.email, expect.any(String));
+    expect(mockClient.disconnect).toHaveBeenCalled();
   });
-});
 
-describe('verifyOTP', () => {
-  test('should verify valid OTP and delete from Redis', async () => {
-    // Act
+  test('verifyOTP should return true for valid OTP and disconnect', async () => {
+    const data = {
+      email: 'test@example.com',
+      otp: '123456',
+    };
+    const connectionString = 'redis://localhost:6379';
+
+    mockClient.get.mockResolvedValueOnce(
+      JSON.stringify({ otp: data.otp, created_at: new Date() })
+    );
+
     const result = await verifyOTP(data, connectionString);
 
-    // Assert
+    expect(createClient).toHaveBeenCalledWith({ url: connectionString });
+    expect(mockClient.get).toHaveBeenCalledWith(data.email);
+    expect(mockClient.disconnect).toHaveBeenCalled();
     expect(result).toBe(true);
   });
 
-  test('should return false if OTP is invalid', async () => {
-    // Act
-    const result = await verifyOTP(
-      { email: data.email, otp: '123789' },
-      connectionString
+  test('verifyOTP should throw an error for expired OTP and disconnect', async () => {
+    const data = {
+      email: 'test@example.com',
+      otp: '123456',
+    };
+    const connectionString = 'redis://localhost:6379';
+
+    mockClient.get.mockResolvedValueOnce(
+      JSON.stringify({ otp: data.otp, created_at: new Date('2022-01-01') })
     );
 
-    // Assert
-    expect(result).toBe(false);
+    await expect(verifyOTP(data, connectionString)).rejects.toThrowError(
+      'Otp Expired'
+    );
+
+  });
+
+  test('verifyOTP should throw an error for invalid OTP and disconnect', async () => {
+    const data = {
+      email: 'test@example.com',
+      otp: '123456',
+    };
+    const connectionString = 'redis://localhost:6379';
+
+    mockClient.get.mockResolvedValueOnce(
+      JSON.stringify({ otp: '654321', created_at: new Date() })
+    );
+
+    await expect(verifyOTP(data, connectionString)).rejects.toThrowError(
+      'Invalid OTP'
+    );
+
+    expect(createClient).toHaveBeenCalledWith({ url: connectionString });
+    expect(mockClient.get).toHaveBeenCalledWith(data.email);
+    expect(mockClient.disconnect).toHaveBeenCalled();
+  });
+
+  test('verifyOTP should throw an error for missing OTP in Redis and disconnect', async () => {
+    const data = {
+      email: 'test@example.com',
+      otp: '123456',
+    };
+    const connectionString = 'redis://localhost:6379';
+
+    mockClient.get.mockResolvedValueOnce(null);
+
+    await expect(verifyOTP(data, connectionString)).rejects.toThrowError(
+      'Invalid Request'
+    );
+
+
+  });
+
+  test('insertOTP should throw an error if creating or connecting the Redis client fails', async () => {
+    const data = {
+      email: 'test@example.com',
+      otp: '123456',
+    };
+    const connectionString = 'invalid-connection-string';
+
+    mockCreateClient.mockImplementation(() => {
+      throw new Error('Failed to create client');
+    });
+
+    await expect(insertOTP(data, connectionString)).rejects.toThrowError(
+      'Failed to create client'
+    );
+
+    expect(createClient).toHaveBeenCalledWith({ url: connectionString });
+    expect(mockClient.set).not.toHaveBeenCalled();
+    expect(mockClient.disconnect).not.toHaveBeenCalled();
+  });
+
+  test('verifyOTP should throw an error if creating or connecting the Redis client fails', async () => {
+    const data = {
+      email: 'test@example.com',
+      otp: '123456',
+    };
+    const connectionString = 'invalid-connection-string';
+
+    mockCreateClient.mockImplementation(() => {
+      throw new Error('Failed to create client');
+    });
+
+    await expect(verifyOTP(data, connectionString)).rejects.toThrowError(
+      'Failed to create client'
+    );
+
+    expect(createClient).toHaveBeenCalledWith({ url: connectionString });
+    expect(mockClient.get).not.toHaveBeenCalled();
+    expect(mockClient.disconnect).not.toHaveBeenCalled();
   });
 });

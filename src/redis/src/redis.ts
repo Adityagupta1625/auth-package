@@ -20,7 +20,7 @@ interface dbData {
  * @returns {Promise<any>} A Promise that resolves to the Redis client.
  * @throws {Error} Throws an error if there is an issue creating or connecting the Redis client.
  */
-const redisClient = async (connectionString: string): Promise<any> => {
+export const redisClient = async (connectionString: string): Promise<any> => {
   try {
     // Create a Redis client with the specified connection URL.
     const client = createClient({
@@ -58,13 +58,12 @@ export const insertOTP = async (
     const client = await redisClient(connectionString);
 
     // Set the OTP in Redis using the user's email as the key.
-    await client.set(data.email, data.otp);
+    await client.set(data.email, JSON.stringify({otp:data.otp,created_at:new Date()}));
     await client.disconnect(); // Disconnect from the Redis server.
 
     
   } catch (e: any) {
     // Throw an error if there is an issue with Redis operations.
-    console.error(e);
     throw new Error(e);
   }
 };
@@ -86,17 +85,28 @@ export const verifyOTP = async (
     const client = await redisClient(connectionString);
 
     // Retrieve the stored OTP from Redis using the user's email as the key.
-    const storedOTP = await client.get(data.email);
+    let storedOTP = await client.get(data.email);
+    
+    if(storedOTP===null) throw new Error('Invalid Request')
+    
+    storedOTP=JSON.parse(storedOTP)
+
+
+    // otp expire check
+    const present=new Date()
+
+    if((present.getTime()-(new Date(storedOTP.created_at)).getTime())>300000)
+      throw new Error('Otp Expired')
 
     // Compare the stored OTP with the provided OTP for verification.
-    if (storedOTP === data.otp) {
+    if (storedOTP.otp === data.otp) {
       // Return true if the OTP is valid.
       await client.disconnect(); // Disconnect from the Redis server.
       return true;
     } else {
       // Return false if the OTP is not valid.
       await client.disconnect();
-      return false;
+      throw new Error('Invalid OTP')
     }
   } catch (e: any) {
     // Throw an error if there is an issue with Redis operations.

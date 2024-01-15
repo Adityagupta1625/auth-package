@@ -1,8 +1,10 @@
 {
   "name": "@email-otp-auth/redis",
   "description": "Otp based Authentication package made to streamline the process of otp based Authentication",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "license": "MIT",
+  "main": "dist/redis/index.js",
+  "types": "dist/redis/index.d.ts",
   "repository": "https://github.com/Adityagupta1625/otp-auth",
   "scripts": {
     "start": "ts-node-dev index.ts",
@@ -10,7 +12,11 @@
     "prepublishOnly": "yarn build"
   },
   "dependencies": {
-    "redis": "^4.6.11"
+    "redis": "^4.6.11",
+    "@types/nodemailer": "^6.4.14",
+    "@types/otp-generator": "^4.0.2",
+    "nodemailer": "^6.9.7",
+    "otp-generator": "^4.0.1"
   },
   "keywords": [
     "Authentication",
@@ -18,6 +24,5 @@
     "Redis",
     "Mailer"
   ],
-  "main": "index.ts",
   "author": "Aditya Gupta <72199742+Adityagupta1625@users.noreply.github.com>"
 }

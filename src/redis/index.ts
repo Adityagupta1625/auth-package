@@ -1,4 +1,4 @@
-import { Auth } from './auth';
+import { Auth } from './src/auth';
 
 /**
  * Default export for the Auth module.

@@ -1,7 +1,7 @@
 import otpGenerator from 'otp-generator';
-import { mailer } from '../../utils/src';
+import { sendMail } from '../../utils';
 import { insertOTP, verifyOTP } from './sqlite';
-import { MailServerConfiguration } from '../../utils/src/mailServerConfig';
+import { MailServerConfiguration } from '../../utils';
 /**
  * Auth class for handling OTP generation and verification using SQLite for OTP storage.
  *
@@ -11,7 +11,7 @@ export class Auth {
   /**
    * The configuration for the mail server.
    *
-   * @type {mailTypes.MailServerConfiguration}
+   * @type {MailServerConfiguration}
    * @private
    */
   private readonly mailServerConfig: MailServerConfiguration;
@@ -45,13 +45,13 @@ export class Auth {
       });
 
       // Send OTP via email
-      await mailer.sendMail(this.mailServerConfig, email, otp);
+      await sendMail(this.mailServerConfig, email, otp);
 
       // Insert OTP in SQLite database
       await insertOTP({ email, otp });
     } catch (e: any) {
       // Throw an error if there is an issue generating or sending OTP.
-      throw new Error(e);
+      throw new Error(e?.message);
     }
   }
 
@@ -67,13 +67,14 @@ export class Auth {
   public async verifyOTP(email: string, otp: string): Promise<boolean> {
     try {
       // Verify OTP in SQLite database
-      if(email===null || otp===null) throw new Error('invalid arguments')
+      if(email===null || otp===null || otp==undefined || email==undefined) 
+            throw new Error('invalid arguments')
       
       const response: boolean = await verifyOTP({ email, otp });
       return response;
     } catch (e: any) {
       // Throw an error if there is an issue verifying OTP.
-      throw new Error(e);
+      throw new Error(e?.message);
     }
   }
 }

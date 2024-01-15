@@ -1,9 +1,9 @@
 {
   "name": "@email-otp-auth/sqlite",
   "description": "Otp based Authentication package made to streamline the process of otp based Authentication",
-  "version": "0.0.2",
-  "main": "dist/src/index.js",
-  "types": "dist/src/index.d.ts",
+  "version": "1.0.0",
+  "main": "dist/sqlite/index.js",
+  "types": "dist/sqlite/index.d.ts",
   "author": "Aditya Gupta <72199742+Adityagupta1625@users.noreply.github.com>",
   "repository": "https://github.com/Adityagupta1625/otp-auth",
   "scripts": {
@@ -19,6 +19,10 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "sqlite3": "^5.1.1"
+    "sqlite3": "^5.1.1",
+    "@types/nodemailer": "^6.4.14",
+    "@types/otp-generator": "^4.0.2",
+    "nodemailer": "^6.9.7",
+    "otp-generator": "^4.0.1"
   }
 }

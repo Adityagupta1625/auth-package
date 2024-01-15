@@ -12,14 +12,13 @@ interface dbData {
   otp: string;
 }
 
-
 /**
  * Establishes a connection to the SQLite database.
  *
  * @returns {Promise<sqlite3.Database>} - A Promise that resolves to the SQLite database connection.
  * @throws {Error} - Throws an error if there is an issue creating the database connection.
  */
-const getDBConnection = async (): Promise<sqlite3.Database> => {
+export const getDBConnection = async (): Promise<sqlite3.Database> => {
   try {
     const db = new sqlite3.Database('./users.db');
     return db;
@@ -33,12 +32,12 @@ const getDBConnection = async (): Promise<sqlite3.Database> => {
  *
  * @returns {Promise<void>} - A Promise that resolves when the table creation is completed.
  */
-const createTableQuery = async (): Promise<string> => {
+export const createTableQuery = async (): Promise<string> => {
   const db = await getDBConnection();
 
   return await new Promise((resolve, reject) => {
     db.run(
-      'CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY, email TEXT UNIQUE, otp TEXT)',
+      'CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY, email TEXT UNIQUE, otp TEXT,created_at DATETIME)',
       (err) => {
         if (err !== null) {
           reject(err);
@@ -58,18 +57,24 @@ const createTableQuery = async (): Promise<string> => {
  * @param {dbData} data - The data object containing the email for fetching user information.
  * @returns {Promise<dbData>} - A Promise that resolves to the user information (email and OTP).
  */
-const fetchQuery = async (data: dbData): Promise<dbData> => {
+export const fetchQuery = async (
+  data: dbData
+): Promise<{
+  email: string;
+  otp: string;
+  created_at: number;
+}> => {
   const db = await getDBConnection();
 
   return await new Promise((resolve, reject) => {
     db.get(
-      'SELECT email,otp FROM users WHERE email=?',
+      'SELECT email,otp,created_at FROM users WHERE email=?',
       [data.email],
       (err, row) => {
         if (err !== null) {
           reject(err);
         } else {
-          resolve(row as dbData);
+          resolve(row as any);
         }
       }
     );
@@ -84,13 +89,13 @@ const fetchQuery = async (data: dbData): Promise<dbData> => {
  * @param {dbData} data - The data object containing the user's email and OTP.
  * @returns {Promise<void>} - A Promise that resolves when the insertion or update is completed.
  */
-const insertQuery = async (data: dbData): Promise<string> => {
+export const insertQuery = async (data: dbData): Promise<string> => {
   const db = await getDBConnection();
 
   return await new Promise((resolve, reject) => {
     db.run(
-      'INSERT INTO users(email,otp) VALUES(?,?) ON CONFLICT(email) DO UPDATE SET otp=excluded.otp',
-      [data.email, data.otp],
+      'INSERT INTO users(email,otp,created_at) VALUES(?,?,?) ON CONFLICT(email) DO UPDATE SET otp=excluded.otp,created_at=excluded.created_at',
+      [data.email, data.otp, new Date()],
       (err) => {
         if (err !== null) {
           reject(err);
@@ -136,11 +141,17 @@ export const insertOTP = async (data: dbData): Promise<void> => {
 export const verifyOTP = async (data: dbData): Promise<boolean> => {
   try {
     const results = await fetchQuery(data);
+    const present = new Date();
+
+    if (results === null) throw new Error('Invalid Request');
+
+    if (present.getTime() - results.created_at > 300000)
+      throw new Error('Otp expired');
 
     if (results.otp === data.otp) {
       return true;
     } else {
-      return false;
+      throw new Error('Invalid OTP');
     }
   } catch (e) {
     throw new Error(e);

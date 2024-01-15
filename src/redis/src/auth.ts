@@ -1,6 +1,6 @@
 import otpGenerator from 'otp-generator';
-import { mailer } from '../../utils/src';
-import { MailServerConfiguration } from '../../utils/src/mailServerConfig';
+import {sendMail} from '../../utils'
+import { MailServerConfiguration } from '../../utils';
 import { insertOTP, verifyOTP } from './redis';
 
 /**
@@ -59,7 +59,7 @@ export class Auth {
       });
 
       // Send OTP via email
-      await mailer.sendMail(this.mailServerConfig, email, otp);
+      await sendMail(this.mailServerConfig, email, otp);
 
       // Insert OTP in Redis
       await insertOTP({ email, otp }, this.redisURL);
